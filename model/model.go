@@ -11,17 +11,17 @@ type MgoSession struct {
 }
 
 type Location struct {
-	Longitude float64
-	Latitude  float64
+	Longitude float64 `json:"longitude" bson:"longitude"`
+	Latitude  float64 `json:"latitude" bson:"latitude"`
 }
 
 type User struct {
-	UUID     UUID
-	Name     string
-	Email    string
-	PhotoURL string
-	Friends  []UUID
-	Location Location
+	UUID     UUID `json:"uuid" bson:"uuid"`
+	Name     string `json:"name" bson:"name"`
+	Email    string `json:"email" bson:"email"`
+	PhotoURL string `json:"photoURL" bson:"photoURL"`
+	Friends  []UUID `json:"friends" bson:"friends"`
+	Location Location `json:"location" bson:"location"`
 }
 
 type UUID string
