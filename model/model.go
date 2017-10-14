@@ -16,7 +16,7 @@ type Location struct {
 }
 
 type User struct {
-	UserID   UUID
+	UUID     UUID
 	Name     string
 	Email    string
 	PhotoURL string
@@ -57,13 +57,13 @@ func (mongoSession *MgoSession) GetUserLoc(id UUID) Location {
 	return Location{}
 }
 
-func (mongoSession *MgoSession) AddFriend(id UUID, friendId UUID) {
+func (mongoSession *MgoSession) PutFriend(id UUID, friendId UUID) {
 }
 
 func (mongoSession *MgoSession) DeleteFriend(id UUID, friendId UUID) {
 }
 
-func (mongoSession *MgoSession) GetFriendsList(id UUID) []User {
+func (mongoSession *MgoSession) GetFriends(id UUID) []User {
 	return []User{}
 }
 
