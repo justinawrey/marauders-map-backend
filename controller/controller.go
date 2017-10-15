@@ -30,6 +30,7 @@ func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Reques
 func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	location := controller.Session.GetUserLoc(uuid)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(location)
 }
 
@@ -43,6 +44,7 @@ func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, 
 func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	user := controller.Session.GetUser(uuid)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
 
@@ -66,6 +68,7 @@ func (controller *Controller) DeleteFriend(w http.ResponseWriter, req *http.Requ
 func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	friends := controller.Session.GetFriends(uuid)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(friends)
 }
 

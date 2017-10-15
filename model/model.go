@@ -28,7 +28,7 @@ type User struct {
 type UUID string
 
 func New() *MgoSession {
-	session, _ := mgo.Dial("localhost")
+	session, _ := mgo.Dial("mongodb://")
 	db := session.DB("marauders")
 	collection := db.C("users")
 	return &MgoSession{
@@ -47,7 +47,7 @@ func (mongoSession *MgoSession) SwitchCollection(collection string) {
 }
 
 func (mongoSession *MgoSession) PutUser(user User) {
-	mongoSession.CurrCollection.Insert(user)
+	mongoSession.CurrCollection.Upsert(bson.M{"uuid": user.UUID}, user)
 }
 
 func (mongoSession *MgoSession) GetUser(id UUID) User {
@@ -62,14 +62,13 @@ func (mongoSession *MgoSession) DeleteUser(id UUID) {
 
 func (mongoSession *MgoSession) PutUserLoc(id UUID, location Location) {
 	toUpdate := bson.M{"uuid": id}
-	update := bson.M{"$set": bson.M{"longitude": location.Longitude, "latitude": location.Latitude}}
+	update := bson.M{"$set": bson.M{"location": location}}
 	mongoSession.CurrCollection.Update(toUpdate, update)
 }
 
 func (mongoSession *MgoSession) GetUserLoc(id UUID) Location {
-	var location Location
-	mongoSession.CurrCollection.Find(bson.M{"uuid": id}).Select(bson.M{"location": 1}).One(&location)
-	return location
+	user := mongoSession.GetUser(id)
+	return user.Location
 }
 
 func (mongoSession *MgoSession) PutFriend(id UUID, friendId UUID) {
@@ -85,8 +84,8 @@ func (mongoSession *MgoSession) DeleteFriend(id UUID, friendId UUID) {
 }
 
 func (mongoSession *MgoSession) GetFriends(id UUID) []User {
-	var friendIds []UUID
-	mongoSession.CurrCollection.Find(bson.M{"uuid": id}).Select(bson.M{"friends": 1}).One(&friendIds)
+	user := mongoSession.GetUser(id)
+	friendIds := user.Friends
 	var friends []User
 	mongoSession.CurrCollection.Find(bson.M{"uuid": bson.M{"$in": friendIds}}).All(&friends)
 	return friends
