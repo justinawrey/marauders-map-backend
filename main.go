@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"fmt"
 
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/justinawrey/groupii-back/controller"
