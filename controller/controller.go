@@ -53,14 +53,14 @@ func (controller *Controller) DeleteUser(w http.ResponseWriter, req *http.Reques
 
 func (controller *Controller) PutFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	friendid := model.UUID(ps.ByName("friendid"))
-	controller.Session.PutFriend(uuid, friendid)
+	friendId := model.UUID(ps.ByName("friendid"))
+	controller.Session.PutFriend(uuid, friendId)
 }
 
 func (controller *Controller) DeleteFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	friendid := model.UUID(ps.ByName("friendid"))
-	controller.Session.DeleteFriend(uuid, friendid)
+	friendId := model.UUID(ps.ByName("friendid"))
+	controller.Session.DeleteFriend(uuid, friendId)
 }
 
 func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
