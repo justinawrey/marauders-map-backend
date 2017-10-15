@@ -28,7 +28,7 @@ type User struct {
 type UUID string
 
 func New() *MgoSession {
-	session, _ := mgo.Dial("mongodb://root:root@localhost:27017")
+	session, _ := mgo.Dial("localhost")
 	db := session.DB("marauders")
 	collection := db.C("users")
 	return &MgoSession{
