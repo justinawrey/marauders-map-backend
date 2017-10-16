@@ -34,7 +34,7 @@ func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Reques
 	json.NewEncoder(w).Encode(location)
 }
 
-func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	body, _ := ioutil.ReadAll(req.Body)	
 	var user model.User
 	json.Unmarshal(body, &user)
@@ -70,6 +70,12 @@ func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Reques
 	friends := controller.Session.GetFriends(uuid)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(friends)
+}
+
+func (controller *Controller) GetAllUsers(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	users := controller.Session.GetAllUsers()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
 }
 
 func (controller *Controller) CleanUp() {

@@ -24,6 +24,8 @@ func main() {
 	router.DELETE("/friend/:uuid/:friendid", controller.DeleteFriend)
 	router.GET("/friend/:uuid", controller.GetFriends)
 
+	router.GET("/user", controller.GetAllUsers)
+
 	// check if we are running through heroku or on localhost
 	port := ":8080"
 	if mongoPort := os.Getenv("PORT"); mongoPort != "" {

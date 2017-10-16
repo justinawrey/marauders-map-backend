@@ -116,6 +116,12 @@ func (mongoSession *MgoSession) GetFriends(id UUID) []User {
 	return friends
 }
 
+func (mongoSession *MgoSession) GetAllUsers() []User {
+	var users []User
+	mongoSession.CurrCollection.Find(nil).All(&users)
+	return users
+}
+
 func (mongoSession *MgoSession) CleanUp() {
 	mongoSession.CurrSession.Close()
 }
