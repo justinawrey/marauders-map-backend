@@ -5,6 +5,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const mLabUri = "mongodb://heroku_6kdghkzh:10bi7f7h7n0jhh8gcqneno4agh@ds121495.mlab.com:21495/heroku_6kdghkzh"
+
 type MgoSession struct {
 	CurrSession    *mgo.Session
 	CurrDB         *mgo.Database
@@ -28,8 +30,9 @@ type User struct {
 type UUID string
 
 func New() *MgoSession {
-	session, _ := mgo.Dial("mongodb://")
-	db := session.DB("marauders")
+	dialInfo, _ := mgo.ParseURL(mLabUri)
+	session, _ := mgo.DialWithInfo(dialInfo)
+	db := session.DB(dialInfo.Database)
 	collection := db.C("users")
 	return &MgoSession{
 		CurrSession:    session,
