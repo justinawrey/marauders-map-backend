@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 
 	"github.com/julienschmidt/httprouter"
-	"gitlab.com/justinawrey/groupii-back/model"
+	"gitlab.com/cpen321/groupii-back/model"
 )
 
 type Controller struct {

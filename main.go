@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"gitlab.com/justinawrey/groupii-back/controller"
+	"gitlab.com/cpen321/groupii-back/controller"
 )
 
 func main() {

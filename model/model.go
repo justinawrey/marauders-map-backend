@@ -30,8 +30,9 @@ type User struct {
 type UUID string
 
 func New() *MgoSession {
-	session, _ := mgo.Dial(mLabUri)
-	db := session.DB("heroku_6kdghkzh")
+	dialInfo, _ := mgo.ParseURL(mLabUri)
+	session, _ := mgo.DialWithInfo(dialInfo)
+	db := session.DB(dialInfo.Database)
 	collection := db.C("users")
 	return &MgoSession{
 		CurrSession:    session,
