@@ -1,11 +1,11 @@
 package model
 
 import (
+	"os"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
-
-const mLabUri = "mongodb://heroku_6kdghkzh:10bi7f7h7n0jhh8gcqneno4agh@ds121495.mlab.com:21495/heroku_6kdghkzh"
 
 type MgoSession struct {
 	CurrSession    *mgo.Session
@@ -30,9 +30,31 @@ type User struct {
 type UUID string
 
 func New() *MgoSession {
-	dialInfo, _ := mgo.ParseURL(mLabUri)
+	// check if we are running through heroku or localhost
+	var mgoSession *MgoSession
+	if mongoDbURI := os.Getenv("MONGODB_URI"); mongoDbURI != "" {
+		mgoSession = dialHeroku(mongoDbURI)
+	} else {
+		mgoSession = dialLocalDB()
+	}
+	return mgoSession
+}
+
+func dialHeroku(mongoDbURI string) *MgoSession {
+	dialInfo, _ := mgo.ParseURL(mongoDbURI)
 	session, _ := mgo.DialWithInfo(dialInfo)
 	db := session.DB(dialInfo.Database)
+	collection := db.C("users")
+	return &MgoSession{
+		CurrSession:    session,
+		CurrDB:         db,
+		CurrCollection: collection,
+	}
+}
+
+func dialLocalDB() *MgoSession {
+	session, _ := mgo.Dial("localhost")
+	db := session.DB("marauders")
 	collection := db.C("users")
 	return &MgoSession{
 		CurrSession:    session,

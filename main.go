@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/cpen321/groupii-back/controller"
@@ -22,6 +23,12 @@ func main() {
 	router.PUT("/friend/:uuid/:friendid", controller.PutFriend)
 	router.DELETE("/friend/:uuid/:friendid", controller.DeleteFriend)
 	router.GET("/friend/:uuid", controller.GetFriends)
-	
-	http.ListenAndServe(":9898", router)
+
+	// check if we are running through heroku or on localhost
+	port := ":8080"
+	if mongoPort := os.Getenv("PORT"); mongoPort != "" {
+		port = ":" + mongoPort
+	}
+
+	http.ListenAndServe(port, router)
 }
