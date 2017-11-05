@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"gopkg.in/mgo.v2"
-	"net/http"
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
+
+	"gopkg.in/mgo.v2"
 
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/cpen321/groupii-back/model"
@@ -35,11 +36,7 @@ func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Reques
 	}
 	err = controller.Session.PutUserLoc(uuid, location)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
@@ -49,11 +46,7 @@ func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Reques
 	uuid := model.UUID(ps.ByName("uuid"))
 	location, err := controller.Session.GetUserLoc(uuid)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -64,7 +57,7 @@ func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Reques
 }
 
 func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	body, err := ioutil.ReadAll(req.Body)	
+	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
@@ -87,11 +80,7 @@ func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, 
 	uuid := model.UUID(ps.ByName("uuid"))
 	user, err := controller.Session.GetUser(uuid)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -105,14 +94,10 @@ func (controller *Controller) DeleteUser(w http.ResponseWriter, req *http.Reques
 	uuid := model.UUID(ps.ByName("uuid"))
 	err := controller.Session.DeleteUser(uuid)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)	
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (controller *Controller) PutFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -120,14 +105,10 @@ func (controller *Controller) PutFriend(w http.ResponseWriter, req *http.Request
 	friendId := model.UUID(ps.ByName("friendid"))
 	err := controller.Session.PutFriend(uuid, friendId)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)	
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (controller *Controller) DeleteFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -135,25 +116,17 @@ func (controller *Controller) DeleteFriend(w http.ResponseWriter, req *http.Requ
 	friendId := model.UUID(ps.ByName("friendid"))
 	err := controller.Session.DeleteFriend(uuid, friendId)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)	
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	friends, err := controller.Session.GetFriends(uuid)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		} else {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
+		checkForResourceNotFound(w, err)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -177,4 +150,12 @@ func (controller *Controller) GetAllUsers(w http.ResponseWriter, req *http.Reque
 
 func (controller *Controller) CleanUp() {
 	controller.Session.CleanUp()
+}
+
+func checkForResourceNotFound(w http.ResponseWriter, err error) {
+	if err == mgo.ErrNotFound {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+	} else {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
