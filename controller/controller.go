@@ -45,9 +45,20 @@ func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Reques
 
 func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	location := controller.Session.GetUserLoc(uuid)
+	location, err := controller.Session.GetUserLoc(uuid)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			http.Error(w, http.StatusText(http.StatusNoContent), http.StatusNoContent)
+		} else {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(location)
+	err = json.NewEncoder(w).Encode(location)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -59,7 +70,7 @@ func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, 
 
 func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	user := controller.Session.GetUser(uuid)
+	user, _ := controller.Session.GetUser(uuid)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
