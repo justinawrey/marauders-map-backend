@@ -97,30 +97,33 @@ func (mongoSession *MgoSession) GetUserLoc(id UUID) (Location, error) {
 	return user.Location, err
 }
 
-func (mongoSession *MgoSession) PutFriend(id UUID, friendId UUID) {
+func (mongoSession *MgoSession) PutFriend(id UUID, friendId UUID) error {
 	toUpdate := bson.M{"uuid": id}
 	update := bson.M{"$addToSet": bson.M{"friends": friendId}}
-	mongoSession.CurrCollection.Update(toUpdate, update)
+	return mongoSession.CurrCollection.Update(toUpdate, update)
 }
 
-func (mongoSession *MgoSession) DeleteFriend(id UUID, friendId UUID) {
+func (mongoSession *MgoSession) DeleteFriend(id UUID, friendId UUID) error {
 	toUpdate := bson.M{"uuid": id}
 	update := bson.M{"$pull": bson.M{"friends": friendId}}
-	mongoSession.CurrCollection.Update(toUpdate, update)
+	return mongoSession.CurrCollection.Update(toUpdate, update)
 }
 
-func (mongoSession *MgoSession) GetFriends(id UUID) []User {
-	user, _ := mongoSession.GetUser(id)
+func (mongoSession *MgoSession) GetFriends(id UUID) ([]User, error) {
+	user, err := mongoSession.GetUser(id)
+	if err != nil {
+		return nil, err
+	}
 	friendIds := user.Friends
 	var friends []User
-	mongoSession.CurrCollection.Find(bson.M{"uuid": bson.M{"$in": friendIds}}).All(&friends)
-	return friends
+	err = mongoSession.CurrCollection.Find(bson.M{"uuid": bson.M{"$in": friendIds}}).All(&friends)
+	return friends, err
 }
 
-func (mongoSession *MgoSession) GetAllUsers() []User {
+func (mongoSession *MgoSession) GetAllUsers() ([]User, error) {
 	var users []User
-	mongoSession.CurrCollection.Find(nil).All(&users)
-	return users
+	err := mongoSession.CurrCollection.Find(nil).All(&users)
+	return users, err
 }
 
 func (mongoSession *MgoSession) CleanUp() {

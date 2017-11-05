@@ -110,6 +110,7 @@ func (controller *Controller) DeleteUser(w http.ResponseWriter, req *http.Reques
 		} else {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
+		return
 	}
 	w.WriteHeader(http.StatusNoContent)	
 }
@@ -117,28 +118,61 @@ func (controller *Controller) DeleteUser(w http.ResponseWriter, req *http.Reques
 func (controller *Controller) PutFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	friendId := model.UUID(ps.ByName("friendid"))
-	controller.Session.PutFriend(uuid, friendId)
+	err := controller.Session.PutFriend(uuid, friendId)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		} else {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
 	w.WriteHeader(http.StatusNoContent)	
 }
 
 func (controller *Controller) DeleteFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	friendId := model.UUID(ps.ByName("friendid"))
-	controller.Session.DeleteFriend(uuid, friendId)
+	err := controller.Session.DeleteFriend(uuid, friendId)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		} else {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
 	w.WriteHeader(http.StatusNoContent)	
 }
 
 func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	friends := controller.Session.GetFriends(uuid)
+	friends, err := controller.Session.GetFriends(uuid)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		} else {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(friends)
+	err = json.NewEncoder(w).Encode(friends)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 func (controller *Controller) GetAllUsers(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	users := controller.Session.GetAllUsers()
+	users, err := controller.Session.GetAllUsers()
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 func (controller *Controller) CleanUp() {
