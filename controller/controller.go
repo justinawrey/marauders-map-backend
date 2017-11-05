@@ -62,10 +62,21 @@ func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Reques
 }
 
 func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	body, _ := ioutil.ReadAll(req.Body)	
+	body, err := ioutil.ReadAll(req.Body)	
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 	var user model.User
-	json.Unmarshal(body, &user)
-	controller.Session.PutUser(user)
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	err = controller.Session.PutUser(user)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {

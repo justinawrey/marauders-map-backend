@@ -71,8 +71,9 @@ func (mongoSession *MgoSession) SwitchCollection(collection string) {
 	mongoSession.CurrCollection = mongoSession.CurrDB.C(collection)
 }
 
-func (mongoSession *MgoSession) PutUser(user User) {
-	mongoSession.CurrCollection.Upsert(bson.M{"uuid": user.UUID}, user)
+func (mongoSession *MgoSession) PutUser(user User) error {
+	_, err := mongoSession.CurrCollection.Upsert(bson.M{"uuid": user.UUID}, user)
+	return err
 }
 
 func (mongoSession *MgoSession) GetUser(id UUID) (User, error) {
