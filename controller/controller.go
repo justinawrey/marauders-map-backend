@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"gopkg.in/mgo.v2"
 	"net/http"
 	"encoding/json"
 	"io/ioutil"
@@ -32,7 +33,14 @@ func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Reques
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	controller.Session.PutUserLoc(uuid, location)
+	err = controller.Session.PutUserLoc(uuid, location)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			http.Error(w, http.StatusText(http.StatusNoContent), http.StatusNoContent)
+		} else {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+	}
 }
 
 func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
