@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"log"
 
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/cpen321/groupii-back/controller"
@@ -27,10 +28,10 @@ func main() {
 	router.GET("/user", controller.GetAllUsers)
 
 	// check if we are running through heroku or on localhost
-	port := ":8080"
+	port := ":8088"
 	if mongoPort := os.Getenv("PORT"); mongoPort != "" {
 		port = ":" + mongoPort
 	}
 
-	http.ListenAndServe(port, router)
+	log.Fatalln(http.ListenAndServe(port, router))
 }
