@@ -21,9 +21,17 @@ func New() *Controller {
 
 func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	body, _ := ioutil.ReadAll(req.Body)
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 	var location model.Location
-	json.Unmarshal(body, &location)
+	err = json.Unmarshal(body, &location)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
 	controller.Session.PutUserLoc(uuid, location)
 }
 
