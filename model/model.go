@@ -82,8 +82,8 @@ func (mongoSession *MgoSession) GetUser(id UUID) (User, error) {
 	return user, err
 }
 
-func (mongoSession *MgoSession) DeleteUser(id UUID) {
-	mongoSession.CurrCollection.Remove(bson.M{"uuid": id})
+func (mongoSession *MgoSession) DeleteUser(id UUID) error {
+	return mongoSession.CurrCollection.Remove(bson.M{"uuid": id})
 }
 
 func (mongoSession *MgoSession) PutUserLoc(id UUID, location Location) error {

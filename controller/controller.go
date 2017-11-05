@@ -36,7 +36,7 @@ func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Reques
 	err = controller.Session.PutUserLoc(uuid, location)
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNoContent), http.StatusNoContent)
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		} else {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
@@ -48,7 +48,7 @@ func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Reques
 	location, err := controller.Session.GetUserLoc(uuid)
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNoContent), http.StatusNoContent)
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		} else {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
@@ -84,7 +84,7 @@ func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, 
 	user, err := controller.Session.GetUser(uuid)
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNoContent), http.StatusNoContent)
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		} else {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
@@ -99,7 +99,14 @@ func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, 
 
 func (controller *Controller) DeleteUser(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
-	controller.Session.DeleteUser(uuid)
+	err := controller.Session.DeleteUser(uuid)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		} else {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+	}
 }
 
 func (controller *Controller) PutFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
