@@ -40,7 +40,9 @@ func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Reques
 		} else {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
+		return
 	}
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (controller *Controller) GetUserLoc(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -76,7 +78,9 @@ func (controller *Controller) PutUser(w http.ResponseWriter, req *http.Request, 
 	err = controller.Session.PutUser(user)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (controller *Controller) GetUser(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -107,18 +111,21 @@ func (controller *Controller) DeleteUser(w http.ResponseWriter, req *http.Reques
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
 	}
+	w.WriteHeader(http.StatusNoContent)	
 }
 
 func (controller *Controller) PutFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	friendId := model.UUID(ps.ByName("friendid"))
 	controller.Session.PutFriend(uuid, friendId)
+	w.WriteHeader(http.StatusNoContent)	
 }
 
 func (controller *Controller) DeleteFriend(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	uuid := model.UUID(ps.ByName("uuid"))
 	friendId := model.UUID(ps.ByName("friendid"))
 	controller.Session.DeleteFriend(uuid, friendId)
+	w.WriteHeader(http.StatusNoContent)	
 }
 
 func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
