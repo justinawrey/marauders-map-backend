@@ -15,9 +15,9 @@ type Controller struct {
 	Session *model.MgoSession
 }
 
-func New() *Controller {
+func NewController() *Controller {
 	return &Controller{
-		Session: model.New(),
+		Session: model.NewSession(),
 	}
 }
 

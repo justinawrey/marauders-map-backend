@@ -29,7 +29,7 @@ type User struct {
 
 type UUID string
 
-func New() *MgoSession {
+func NewSession() *MgoSession {
 	// check if we are running through heroku or localhost
 	var mgoSession *MgoSession
 	if mongoDbURI := os.Getenv("MONGODB_URI"); mongoDbURI != "" {

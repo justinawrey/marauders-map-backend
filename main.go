@@ -11,7 +11,7 @@ import (
 
 func main() {
 	router := httprouter.New()
-	controller := controller.New()
+	controller := controller.NewController()
 	defer controller.CleanUp()
 
 	router.PUT("/location/:uuid", controller.PutUserLoc)
