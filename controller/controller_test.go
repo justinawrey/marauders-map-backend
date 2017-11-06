@@ -123,47 +123,234 @@ func TestGetUserLoc(t *testing.T) {
 
 func TestPutUser(t *testing.T) {
 	putUserHandle := httprouter.Handle(testController.PutUser)
+	badUserQuery := `{
+		"uuid": "thisuserdoesexist",
+		"name": 1234,
+		"email": 23,
+		"photoURL": "sdf/sdf/sdf/",
+		"friends": ["12", "13", "14"],
+		"location": {
+		  "longitude": 129,
+		  "latitude": 456
+		}
+	  }`
 
- // put badly formatted json
+	goodUserQuery := `{
+		"uuid": "thisuserdoesexist",
+		"name": "jon doe",
+		"email": "jon@jon.com",
+		"photoURL": "sdf/sdf/sdf/",
+		"friends": ["12", "13", "14"],
+		"location": {
+		  "longitude": 129,
+		  "latitude": 456
+		}
+	  }`
 
- // successful put user
+	// put badly formatted user
+	resp := makeRequest("PUT",
+		"/user/:uuid",
+		"/user/thisuserdoesexist",
+		bytes.NewBuffer([]byte(badUserQuery)),
+		putUserHandle)
+
+	if resp.Code != http.StatusBadRequest {
+		t.Error("expected 400 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+
+	// successful put user
+	resp = makeRequest("PUT",
+		"/user/:uuid",
+		"/user/thisuserdoesexist",
+		bytes.NewBuffer([]byte(goodUserQuery)),
+		putUserHandle)
+
+	if resp.Code != http.StatusNoContent {
+		t.Error("expected 204 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
 }
 
-//func TestGetUser(t *testing.T) {
-//	getUserHandle := httprouter.Handle(testController.GetUser)
+func TestGetUser(t *testing.T) {
+	getUserHandle := httprouter.Handle(testController.GetUser)
 
-// do tests..
-//}
+	// get user that does not exist
+	resp := makeRequest("GET",
+		"/user/:uuid",
+		"/user/thisuserdoesnotexist",
+		bytes.NewBuffer([]byte("")),
+		getUserHandle)
 
-//func TestDeleteUser(t *testing.T) {
-//	deleteUserHandle := httprouter.Handle(testController.DeleteUser)
+	if resp.Code != http.StatusNotFound {
+		t.Error("expected 404 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
 
-// do tests..
-//}
+	// successful get user
+	resp = makeRequest("GET",
+		"/user/:uuid",
+		"/user/thisuserdoesexist",
+		bytes.NewBuffer([]byte("")),
+		getUserHandle)
 
-//func TestPutFriend(t *testing.T) {
-//	putFriendHandle := httprouter.Handle(testController.PutFriend)
+	if resp.Code != http.StatusOK {
+		t.Error("expected 200 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+}
 
-// do tests..
-//}
+func TestDeleteUser(t *testing.T) {
+	deleteUserHandle := httprouter.Handle(testController.DeleteUser)
+	putUserHandle := httprouter.Handle(testController.PutUser)
+	goodUserQuery := `{
+		"uuid": "thisuserdoesexist",
+		"name": "jon doe",
+		"email": "jon@jon.com",
+		"photoURL": "sdf/sdf/sdf/",
+		"friends": ["12", "13", "14"],
+		"location": {
+		  "longitude": 129,
+		  "latitude": 456
+		}
+	  }`
 
-//func TestDeleteFriend(t *testing.T) {
-//	deleteFriendHandle := httprouter.Handle(testController.DeleteFriend)
+	// delete user that does not exist
+	resp := makeRequest("DELETE",
+		"/user/:uuid",
+		"/user/thisuserdoesnotexist",
+		bytes.NewBuffer([]byte("")),
+		deleteUserHandle)
 
-// do tests..
-//}
+	if resp.Code != http.StatusNotFound {
+		t.Error("expected 404 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
 
-//func TestGetFriends(t *testing.T) {
-//	getFriendsHandle := httprouter.Handle(testController.GetFriends)
+	// successful delete user
+	resp = makeRequest("DELETE",
+		"/user/:uuid",
+		"/user/thisuserdoesexist",
+		bytes.NewBuffer([]byte("")),
+		deleteUserHandle)
 
-// do tests..
-//}
+	if resp.Code != http.StatusNoContent {
+		t.Error("expected 204 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
 
-//func TestGetAllUsers(t *testing.T) {
-//	getAllUsersHandle := httprouter.Handle(testController.GetAllUsers)
+	// put the test user back
+	resp = makeRequest("PUT",
+		"/user/:uuid",
+		"/user/thisuserdoesexist",
+		bytes.NewBuffer([]byte(goodUserQuery)),
+		putUserHandle)
 
-// do tests..
-//}
+	if resp.Code != http.StatusNoContent {
+		t.Error("expected 204 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+}
+
+func TestPutFriend(t *testing.T) {
+	putFriendHandle := httprouter.Handle(testController.PutFriend)
+
+	// add friend to a user that does not exist
+	resp := makeRequest("PUT",
+		"/friend/:uuid/:friendid",
+		"/friend/thisuserdoesnotexist/thisuserdoesexist",
+		bytes.NewBuffer([]byte("")),
+		putFriendHandle)
+
+	if resp.Code != http.StatusNotFound {
+		t.Error("Expected 404 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+
+	// add friend to a user that does exist
+	resp = makeRequest("PUT",
+		"/friend/:uuid/:friendid",
+		"/friend/thisuserdoesexist/12345",
+		bytes.NewBuffer([]byte("")),
+		putFriendHandle)
+
+	if resp.Code != http.StatusNoContent {
+		t.Error("Expected 204 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+}
+
+func TestDeleteFriend(t *testing.T) {
+	deleteFriendHandle := httprouter.Handle(testController.DeleteFriend)
+
+	// delete friend from a user that does not exist
+	resp := makeRequest("DELETE",
+		"/friend/:uuid/:friendid",
+		"/friend/thisuserdoesnotexist/thisuserdoesexist",
+		bytes.NewBuffer([]byte("")),
+		deleteFriendHandle)
+
+	if resp.Code != http.StatusNotFound {
+		t.Error("Expected 404 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+
+	// delete friend from a user that does exist
+	resp = makeRequest("DELETE",
+		"/friend/:uuid/:friendid",
+		"/friend/thisuserdoesexist/12",
+		bytes.NewBuffer([]byte("")),
+		deleteFriendHandle)
+
+	if resp.Code != http.StatusNoContent {
+		t.Error("Expected 204 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+}
+
+func TestGetFriends(t *testing.T) {
+	getFriendsHandle := httprouter.Handle(testController.GetFriends)
+
+	// get friends from a user that does not exist
+	resp := makeRequest("GET",
+		"/friend/:uuid",
+		"/friend/thisuserdoesnotexist",
+		bytes.NewBuffer([]byte("")),
+		getFriendsHandle)
+
+	if resp.Code != http.StatusNotFound {
+		t.Error("Expected 404 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+
+	// get friends from a user that does exist
+	resp = makeRequest("GET",
+		"/friend/:uuid",
+		"/friend/thisuserdoesexist",
+		bytes.NewBuffer([]byte("")),
+		getFriendsHandle)
+
+	if resp.Code != http.StatusOK {
+		t.Error("Expected 200 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+}
+
+func TestGetAllUsers(t *testing.T) {
+	getAllUsersHandle := httprouter.Handle(testController.GetAllUsers)
+	
+	// get all users
+	resp := makeRequest("GET",
+		"/user",
+		"/user",
+		bytes.NewBuffer([]byte("")),
+		getAllUsersHandle)
+
+	if resp.Code != http.StatusOK {
+		t.Error("Expected 200 response code, got " +
+			strconv.Itoa(resp.Code))
+	}
+}
 
 func makeRequest(method string, uri string, req_uri string, body *bytes.Buffer, handle httprouter.Handle) *httptest.ResponseRecorder {
 	recorder := httptest.NewRecorder()
