@@ -161,10 +161,15 @@ func (controller *Controller) SearchTextQuery(w http.ResponseWriter, req *http.R
 		checkForResourceNotFound(w, err)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(users)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	if len(users) > 0 {
+		err = json.NewEncoder(w).Encode(users)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}		
+	} else {
+		w.Write([]byte("[]"))
 	}
 }
 
