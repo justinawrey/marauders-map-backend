@@ -26,6 +26,7 @@ func main() {
 	router.GET("/friend/:uuid", controller.GetFriends)
 
 	router.GET("/user", controller.GetAllUsers)
+	router.GET("/search", controller.SearchTextQuery)
 
 	// check if we are running through heroku or on localhost
 	port := ":8088"

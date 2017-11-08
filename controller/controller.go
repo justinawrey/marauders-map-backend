@@ -148,6 +148,26 @@ func (controller *Controller) GetAllUsers(w http.ResponseWriter, req *http.Reque
 	}
 }
 
+func (controller *Controller) SearchTextQuery(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	urlQueryMap := req.URL.Query()
+	_, ok := urlQueryMap["query"]
+	if len(urlQueryMap) != 1 || !ok {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return		
+	}
+	queryString := urlQueryMap["query"][0]
+	users, err := controller.Session.SearchTextQuery(queryString)
+	if err != nil {
+		checkForResourceNotFound(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+}
+
 func (controller *Controller) CleanUp() {
 	controller.Session.CleanUp()
 }
