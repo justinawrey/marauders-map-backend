@@ -128,11 +128,9 @@ func (mongoSession *MgoSession) GetAllUsers() ([]User, error) {
 
 func (mongoSession *MgoSession) SearchTextQuery(query string) ([]User, error) {
 	var users []User
-	searchProjection := []bson.M{
-		bson.M{"$text" : bson.M{"$search" : query}},
-		bson.M{"$score" : bson.M{"$meta" : "textScore"}},
-	}
-	err := mongoSession.CurrCollection.Find(searchProjection).Sort("-score").All(&users)
+	searchQuery := bson.M{"$text": bson.M{"$search": query}}
+	scoreProjection := bson.M{"score": bson.M{"$meta": "textScore"}}
+	err := mongoSession.CurrCollection.Find(searchQuery).Select(scoreProjection).Sort("$textScore:score").All(&users)
 	return users, err
 }
 
