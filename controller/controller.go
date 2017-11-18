@@ -2,11 +2,16 @@ package controller
 
 import (
 	"encoding/json"
+	"image"
 	"io/ioutil"
 	"net/http"
+	"bufio"
+	"bytes"
 
 	"gopkg.in/mgo.v2"
 
+	"github.com/dustin/go-heatmap"
+	"github.com/dustin/go-heatmap/schemes"
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/cpen321/groupii-back/model"
 )
@@ -139,7 +144,8 @@ func (controller *Controller) GetFriends(w http.ResponseWriter, req *http.Reques
 func (controller *Controller) GetAllUsers(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	users, err := controller.Session.GetAllUsers()
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		checkForResourceNotFound(w, err)
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(users)
@@ -153,7 +159,7 @@ func (controller *Controller) SearchTextQuery(w http.ResponseWriter, req *http.R
 	_, ok := urlQueryMap["query"]
 	if len(urlQueryMap) != 1 || !ok {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return		
+		return
 	}
 	queryString := urlQueryMap["query"][0]
 	users, err := controller.Session.SearchTextQuery(queryString)
@@ -167,10 +173,46 @@ func (controller *Controller) SearchTextQuery(w http.ResponseWriter, req *http.R
 		err = json.NewEncoder(w).Encode(users)
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}		
+		}
 	} else {
 		w.Write([]byte("[]"))
 	}
+}
+
+func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	users, err := controller.Session.GetAllUsers()
+	if err != nil {
+		checkForResourceNotFound(w, err)
+		return
+	}
+	var locations []model.Location
+	for _, user := range users {
+		locations = append(locations, user.Location)
+	}
+}
+
+func (controller *Controller) GetHeatMapMetrics(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	users, err := controller.Session.GetAllUsers()
+	if err != nil {
+		checkForResourceNotFound(w, err)
+		return
+	}
+	points := []heatmap.DataPoint{}
+	for _, user := range users {
+		points = append(points, heatmap.P(user.Location.Longitude,
+			user.Location.Latitude))
+	}
+
+	var b bytes.Buffer
+	writer := bufio.NewWriter(&b)
+	err = heatmap.KMZ(image.Rect(0, 0, 1024, 1024),
+		points, 200, 128, schemes.AlphaFire, writer)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-type", "application/vnd.google-earth.kmz")
+	w.Write(b.Bytes())
 }
 
 func (controller *Controller) CleanUp() {
