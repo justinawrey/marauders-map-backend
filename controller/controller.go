@@ -7,6 +7,8 @@ import (
 	"image"
 	"io/ioutil"
 	"net/http"
+	"bufio"
+	"bytes"
 
 	"gopkg.in/mgo.v2"
 
