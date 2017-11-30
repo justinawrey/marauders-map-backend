@@ -287,7 +287,7 @@ func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http
 	}
 
 	// get updated clusters
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 10000; i++ {
 		centroids = kmeans.Do(observations, centroids, calculateCentroid)
 	}
 
