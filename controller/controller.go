@@ -1,17 +1,20 @@
 package controller
 
 import (
-	"bufio"
-	"bytes"
 	"encoding/json"
 	"image"
+	"image/png"
 	"io/ioutil"
+	"math"
 	"net/http"
+
+	"github.com/dustin/go-heatmap/schemes"
+
+	"go.skia.org/infra/perf/go/kmeans"
 
 	"gopkg.in/mgo.v2"
 
 	"github.com/dustin/go-heatmap"
-	"github.com/dustin/go-heatmap/schemes"
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/cpen321/groupii-back/model"
 )
@@ -24,6 +27,34 @@ func NewController() *Controller {
 	return &Controller{
 		Session: model.NewSession(),
 	}
+}
+
+type observation struct {
+	longitude float64
+	latitude  float64
+}
+
+func (obs observation) Distance(c kmeans.Clusterable) float64 {
+	other := c.(observation)
+	return math.Sqrt((obs.longitude-other.longitude)*(obs.longitude-other.longitude) +
+		(obs.latitude-other.latitude)*(obs.latitude-other.latitude))
+}
+
+func (obs observation) AsClusterable() kmeans.Clusterable {
+	return obs
+}
+
+// calculateCentroid implements CalculateCentroid.
+func calculateCentroid(members []kmeans.Clusterable) kmeans.Centroid {
+	var sumX = 0.0
+	var sumY = 0.0
+	length := float64(len(members))
+
+	for _, m := range members {
+		sumX += m.(observation).longitude
+		sumY += m.(observation).latitude
+	}
+	return observation{longitude: sumX / length, latitude: sumY / length}
 }
 
 func (controller *Controller) PutUserLoc(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -189,6 +220,23 @@ func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http
 	for _, user := range users {
 		locations = append(locations, user.Location)
 	}
+
+	//observations := []Clusterable{
+	//	myObservation{0.0, 0.0},
+	//	myObservation{3.0, 0.0},
+	//	myObservation{3.0, 0.5},
+	//	myObservation{6.0, 6.0},
+	//	myObservation{6.0, 6.1},
+	//	myObservation{6.0, 6.2},
+	//}
+	//centroids := []Centroid{
+	//	myObservation{0.0, 0.0},
+	//	myObservation{3.0, 0.0},
+	//	myObservation{6.0, 6.0},
+	//}
+	//centroids = Do(observations, centroids, calculateCentroid)
+	//centroids = Do(observations, centroids, calculateCentroid)
+	//centroids = Do(observations, centroids, calculateCentroid)
 }
 
 func (controller *Controller) GetHeatMapMetrics(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -203,16 +251,19 @@ func (controller *Controller) GetHeatMapMetrics(w http.ResponseWriter, req *http
 			user.Location.Latitude))
 	}
 
-	var b bytes.Buffer
-	writer := bufio.NewWriter(&b)
-	err = heatmap.KMZ(image.Rect(0, 0, 1024, 1024),
-		points, 200, 128, schemes.AlphaFire, writer)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-type", "application/vnd.google-earth.kmz")
-	w.Write(b.Bytes())
+	mapimg := heatmap.Heatmap(image.Rect(0, 0, 1024, 1024), points, 200, 128, schemes.AlphaFire)
+	w.Header().Set("Content-Type", "image/png")
+	png.Encode(w, mapimg)
+	//var b bytes.Buffer
+	//writer := bufio.NewWriter(&b)
+	//err = heatmap.KMZ(image.Rect(0, 0, 1024, 1024),
+	//	points, 200, 128, schemes.AlphaFire, writer)
+	//if err != nil {
+	//	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	//	return
+	//}
+	//w.Header().Set("Content-type", "application/vnd.google-earth.kmz")
+	//w.Write(b.Bytes())
 }
 
 func (controller *Controller) CleanUp() {
