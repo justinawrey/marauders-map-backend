@@ -39,6 +39,52 @@ type observation struct {
 	latitude  float64
 }
 
+func normalize(weights []float64) []float64 {
+	min, max := minMax(weights)
+	var normalizedWeights []float64
+	for _, weight := range weights {
+		normalizedWeight := (weight - min) / (max - min)
+		normalizedWeights = append(normalizedWeights, normalizedWeight)
+	}
+	return normalizedWeights
+}
+
+func minMax(array []float64) (float64, float64) {
+	var max float64 = array[0]
+	var min float64 = array[0]
+	for _, value := range array {
+		if max < value {
+			max = value
+		}
+		if min > value {
+			min = value
+		}
+	}
+	return min, max
+}
+
+func weightToMeters(weight float64) float64 {
+	basis := 120.0
+	switch {
+	case weight < 0.0:
+		return -1.0
+	case weight <= 0.2:
+		return basis * 1.0
+	case weight <= 0.4:
+		return basis * 2.0
+	case weight <= 0.6:
+		return basis * 3.0
+	case weight <= 0.8:
+		return basis * 4.0
+	case weight <= 1.0:
+		return basis * 5.0
+	case weight > 1.0:
+		return -1.0
+	default:
+		return -1.0
+	}
+}
+
 func (obs observation) Distance(c kmeans.Clusterable) float64 {
 	other := c.(observation)
 	return math.Sqrt((obs.longitude-other.longitude)*(obs.longitude-other.longitude) +
@@ -233,19 +279,18 @@ func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http
 
 	// set up centroids for kmeans
 	var centroids []kmeans.Centroid
-	for i := 0; i < 100000; i++ {
-		long := float64(randomInRange(-180, 180))
-		lat := float64(randomInRange(-90, 90))
+	for i := 0; i < 5; i++ {
 		centroids = append(centroids, observation{
-			longitude: long,
-			latitude:  lat,
+			longitude: -123.249629 + (rand.Float64() / 100.0) - 0.005,
+			latitude:  49.261895 + (rand.Float64() / 100.0) - 0.005,
 		})
 	}
 
 	// get updated clusters
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 1000; i++ {
 		centroids = kmeans.Do(observations, centroids, calculateCentroid)
 	}
+
 	clusters, _ := kmeans.GetClusters(observations, centroids)
 
 	var retData []struct {
@@ -253,15 +298,20 @@ func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http
 		Latitude  float64
 		Radius    float64
 	}
+	var weights []float64
 	for _, cluster := range clusters {
+		weights = append(weights, float64(len(cluster)-1))
+	}
+	normalizedWeights := normalize(weights)
+	for i := 0; i < len(clusters); i++ {
 		retData = append(retData, struct {
 			Longitude float64
 			Latitude  float64
 			Radius    float64
 		}{
-			Longitude: cluster[0].(observation).longitude,
-			Latitude:  cluster[0].(observation).latitude,
-			Radius:    float64(len(cluster) - 1), // first element of cluster is centroid, this is not actual data
+			Longitude: clusters[i][0].(observation).longitude,
+			Latitude:  clusters[i][0].(observation).latitude,
+			Radius:    weightToMeters(normalizedWeights[i]),
 		})
 	}
 	w.Header().Set("Content-Type", "application/json")
