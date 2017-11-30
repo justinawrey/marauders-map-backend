@@ -281,13 +281,13 @@ func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http
 	var centroids []kmeans.Centroid
 	for i := 0; i < 5; i++ {
 		centroids = append(centroids, observation{
-			longitude: -123.249629 + (rand.Float64() / 100.0) - 0.005,
-			latitude:  49.261895 + (rand.Float64() / 100.0) - 0.005,
+			longitude: -123.249629 + float64((i+1))/1000.0 - 0.005,
+			latitude:  49.261895 + float64((i+1))/1000.0 - 0.005,
 		})
 	}
 
 	// get updated clusters
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 1000; i++ {
 		centroids = kmeans.Do(observations, centroids, calculateCentroid)
 	}
 
