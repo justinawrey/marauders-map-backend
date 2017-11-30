@@ -6,17 +6,17 @@ import (
 	"image/png"
 	"io/ioutil"
 	"math"
+	"math/rand"
 	"net/http"
+	"time"
 
-	"github.com/dustin/go-heatmap/schemes"
-
-	"go.skia.org/infra/perf/go/kmeans"
-
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 
 	"github.com/dustin/go-heatmap"
+	"github.com/dustin/go-heatmap/schemes"
 	"github.com/julienschmidt/httprouter"
 	"gitlab.com/cpen321/groupii-back/model"
+	"go.skia.org/infra/perf/go/kmeans"
 )
 
 type Controller struct {
@@ -27,6 +27,11 @@ func NewController() *Controller {
 	return &Controller{
 		Session: model.NewSession(),
 	}
+}
+
+func randomInRange(min int, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return rand.Intn(max-min) + min
 }
 
 type observation struct {
@@ -216,30 +221,54 @@ func (controller *Controller) GetDensityMetrics(w http.ResponseWriter, req *http
 		checkForResourceNotFound(w, err)
 		return
 	}
-	var locations []model.Location
+
+	// set up observations for kmeans
+	var observations []kmeans.Clusterable
 	for _, user := range users {
-		locations = append(locations, user.Location)
+		observations = append(observations, observation{
+			longitude: user.Location.Longitude,
+			latitude:  user.Location.Latitude,
+		})
 	}
 
-	//observations := []Clusterable{
-	//	myObservation{0.0, 0.0},
-	//	myObservation{3.0, 0.0},
-	//	myObservation{3.0, 0.5},
-	//	myObservation{6.0, 6.0},
-	//	myObservation{6.0, 6.1},
-	//	myObservation{6.0, 6.2},
-	//}
-	//centroids := []Centroid{
-	//	myObservation{0.0, 0.0},
-	//	myObservation{3.0, 0.0},
-	//	myObservation{6.0, 6.0},
-	//}
-	//centroids = Do(observations, centroids, calculateCentroid)
-	//centroids = Do(observations, centroids, calculateCentroid)
-	//centroids = Do(observations, centroids, calculateCentroid)
+	// set up centroids for kmeans
+	var centroids []kmeans.Centroid
+	for i := 0; i < 100000; i++ {
+		long := float64(randomInRange(-180, 180))
+		lat := float64(randomInRange(-90, 90))
+		centroids = append(centroids, observation{
+			longitude: long,
+			latitude:  lat,
+		})
+	}
+
+	// get updated clusters
+	for i := 0; i < 100000; i++ {
+		centroids = kmeans.Do(observations, centroids, calculateCentroid)
+	}
+	clusters, _ := kmeans.GetClusters(observations, centroids)
+
+	var retData []struct {
+		Longitude float64
+		Latitude  float64
+		Radius    float64
+	}
+	for _, cluster := range clusters {
+		retData = append(retData, struct {
+			Longitude float64
+			Latitude  float64
+			Radius    float64
+		}{
+			Longitude: cluster[0].(observation).longitude,
+			Latitude:  cluster[0].(observation).latitude,
+			Radius:    float64(len(cluster) - 1), // first element of cluster is centroid, this is not actual data
+		})
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(retData)
 }
 
-func (controller *Controller) GetHeatMapMetrics(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+func (controller *Controller) GetHeatmapKML(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	users, err := controller.Session.GetAllUsers()
 	if err != nil {
 		checkForResourceNotFound(w, err)
@@ -250,20 +279,24 @@ func (controller *Controller) GetHeatMapMetrics(w http.ResponseWriter, req *http
 		points = append(points, heatmap.P(user.Location.Longitude,
 			user.Location.Latitude))
 	}
+	w.Header().Set("Content-Type", "application/vnd.google-earth.kml+xml")
+	heatmap.KML(image.Rect(0, 0, 1024, 1024), points, 200, 128, schemes.AlphaFire, "https://maraudersss.herokuapp.com/heatmap.png", w)
+}
 
+func (controller *Controller) GetHeatmapPNG(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	users, err := controller.Session.GetAllUsers()
+	if err != nil {
+		checkForResourceNotFound(w, err)
+		return
+	}
+	points := []heatmap.DataPoint{}
+	for _, user := range users {
+		points = append(points, heatmap.P(user.Location.Longitude,
+			user.Location.Latitude))
+	}
 	mapimg := heatmap.Heatmap(image.Rect(0, 0, 1024, 1024), points, 200, 128, schemes.AlphaFire)
 	w.Header().Set("Content-Type", "image/png")
 	png.Encode(w, mapimg)
-	//var b bytes.Buffer
-	//writer := bufio.NewWriter(&b)
-	//err = heatmap.KMZ(image.Rect(0, 0, 1024, 1024),
-	//	points, 200, 128, schemes.AlphaFire, writer)
-	//if err != nil {
-	//	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	//	return
-	//}
-	//w.Header().Set("Content-type", "application/vnd.google-earth.kmz")
-	//w.Write(b.Bytes())
 }
 
 func (controller *Controller) CleanUp() {

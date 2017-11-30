@@ -28,7 +28,8 @@ func main() {
 
 	router.GET("/search", controller.SearchTextQuery)
 	router.GET("/density", controller.GetDensityMetrics)
-	router.GET("/heat.kmz", controller.GetHeatMapMetrics)
+	router.GET("/heatmap.png", controller.GetHeatmapPNG)
+	router.GET("/heatmap.kml", controller.GetHeatmapKML)
 
 	// check if we are running through heroku or on localhost
 	port := ":8088"
