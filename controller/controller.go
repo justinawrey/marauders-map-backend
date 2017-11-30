@@ -64,7 +64,7 @@ func minMax(array []float64) (float64, float64) {
 }
 
 func weightToMeters(weight float64) float64 {
-	basis := 120.0
+	basis := 60.0
 	switch {
 	case weight < 0.0:
 		return -1.0
