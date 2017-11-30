@@ -330,7 +330,7 @@ func (controller *Controller) GetHeatmapKML(w http.ResponseWriter, req *http.Req
 			user.Location.Latitude))
 	}
 	w.Header().Set("Content-Type", "application/vnd.google-earth.kml+xml")
-	heatmap.KML(image.Rect(0, 0, 1024, 1024), points, 300, 128, schemes.AlphaFire, "https://maraudersss.herokuapp.com/heatmap.png", w)
+	heatmap.KML(image.Rect(0, 0, 1024, 1024), points, 250, 128, schemes.AlphaFire, "https://maraudersss.herokuapp.com/heatmap.png", w)
 }
 
 func (controller *Controller) GetHeatmapPNG(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -344,7 +344,7 @@ func (controller *Controller) GetHeatmapPNG(w http.ResponseWriter, req *http.Req
 		points = append(points, heatmap.P(user.Location.Longitude,
 			user.Location.Latitude))
 	}
-	mapimg := heatmap.Heatmap(image.Rect(0, 0, 1024, 1024), points, 300, 128, schemes.AlphaFire)
+	mapimg := heatmap.Heatmap(image.Rect(0, 0, 1024, 1024), points, 250, 128, schemes.AlphaFire)
 	w.Header().Set("Content-Type", "image/png")
 	png.Encode(w, mapimg)
 }
