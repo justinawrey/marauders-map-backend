@@ -1,0 +1,734 @@
+[
+    {
+        "uuid": "uuiduser0",
+        "name": "user0",
+        "email": "user0@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user1",
+            "user2",
+            "user3"
+        ],
+        "location": {
+            "longitude": -123.25252618262091,
+            "latitude": 49.262171275662595
+        }
+    },
+    {
+        "uuid": "uuiduser1",
+        "name": "user1",
+        "email": "user1@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user2",
+            "user3",
+            "user4"
+        ],
+        "location": {
+            "longitude": -123.25410023137306,
+            "latitude": 49.2625958552334
+        }
+    },
+    {
+        "uuid": "uuiduser2",
+        "name": "user2",
+        "email": "user2@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user3",
+            "user4",
+            "user5"
+        ],
+        "location": {
+            "longitude": -123.25297940021086,
+            "latitude": 49.2648470980244
+        }
+    },
+    {
+        "uuid": "uuiduser3",
+        "name": "user3",
+        "email": "user3@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user4",
+            "user5",
+            "user6"
+        ],
+        "location": {
+            "longitude": -123.24479089252867,
+            "latitude": 49.262786363202
+        }
+    },
+    {
+        "uuid": "uuiduser4",
+        "name": "user4",
+        "email": "user4@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user5",
+            "user6",
+            "user7"
+        ],
+        "location": {
+            "longitude": -123.24948492377179,
+            "latitude": 49.263551437203695
+        }
+    },
+    {
+        "uuid": "uuiduser5",
+        "name": "user5",
+        "email": "user5@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user6",
+            "user7",
+            "user8"
+        ],
+        "location": {
+            "longitude": -123.25368220772738,
+            "latitude": 49.26301308782795
+        }
+    },
+    {
+        "uuid": "uuiduser6",
+        "name": "user6",
+        "email": "user6@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user7",
+            "user8",
+            "user9"
+        ],
+        "location": {
+            "longitude": -123.24967267351659,
+            "latitude": 49.26076048577823
+        }
+    },
+    {
+        "uuid": "uuiduser7",
+        "name": "user7",
+        "email": "user7@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user8",
+            "user9",
+            "user10"
+        ],
+        "location": {
+            "longitude": -123.24982290511355,
+            "latitude": 49.264874461322364
+        }
+    },
+    {
+        "uuid": "uuiduser8",
+        "name": "user8",
+        "email": "user8@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user9",
+            "user10",
+            "user11"
+        ],
+        "location": {
+            "longitude": -123.25289464800453,
+            "latitude": 49.262201400333204
+        }
+    },
+    {
+        "uuid": "uuiduser9",
+        "name": "user9",
+        "email": "user9@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user10",
+            "user11",
+            "user12"
+        ],
+        "location": {
+            "longitude": -123.25112527803589,
+            "latitude": 49.26057405640788
+        }
+    },
+    {
+        "uuid": "uuiduser10",
+        "name": "user10",
+        "email": "user10@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user11",
+            "user12",
+            "user13"
+        ],
+        "location": {
+            "longitude": -123.25129866146328,
+            "latitude": 49.25907509085255
+        }
+    },
+    {
+        "uuid": "uuiduser11",
+        "name": "user11",
+        "email": "user11@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user12",
+            "user13",
+            "user14"
+        ],
+        "location": {
+            "longitude": -123.24845417605155,
+            "latitude": 49.263929489455535
+        }
+    },
+    {
+        "uuid": "uuiduser12",
+        "name": "user12",
+        "email": "user12@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user13",
+            "user14",
+            "user15"
+        ],
+        "location": {
+            "longitude": -123.25111134695821,
+            "latitude": 49.26368113054715
+        }
+    },
+    {
+        "uuid": "uuiduser13",
+        "name": "user13",
+        "email": "user13@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user14",
+            "user15",
+            "user16"
+        ],
+        "location": {
+            "longitude": -123.24606222522812,
+            "latitude": 49.26340057455562
+        }
+    },
+    {
+        "uuid": "uuiduser14",
+        "name": "user14",
+        "email": "user14@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user15",
+            "user16",
+            "user17"
+        ],
+        "location": {
+            "longitude": -123.25147207156529,
+            "latitude": 49.26051373948233
+        }
+    },
+    {
+        "uuid": "uuiduser15",
+        "name": "user15",
+        "email": "user15@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user16",
+            "user17",
+            "user18"
+        ],
+        "location": {
+            "longitude": -123.25054141910955,
+            "latitude": 49.25801206400477
+        }
+    },
+    {
+        "uuid": "uuiduser16",
+        "name": "user16",
+        "email": "user16@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user17",
+            "user18",
+            "user19"
+        ],
+        "location": {
+            "longitude": -123.24870039849235,
+            "latitude": 49.25922623452575
+        }
+    },
+    {
+        "uuid": "uuiduser17",
+        "name": "user17",
+        "email": "user17@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user18",
+            "user19",
+            "user20"
+        ],
+        "location": {
+            "longitude": -123.24496860929604,
+            "latitude": 49.2621620289627
+        }
+    },
+    {
+        "uuid": "uuiduser18",
+        "name": "user18",
+        "email": "user18@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user19",
+            "user20",
+            "user21"
+        ],
+        "location": {
+            "longitude": -123.25299051202457,
+            "latitude": 49.26235397115044
+        }
+    },
+    {
+        "uuid": "uuiduser19",
+        "name": "user19",
+        "email": "user19@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user20",
+            "user21",
+            "user22"
+        ],
+        "location": {
+            "longitude": -123.2468702411986,
+            "latitude": 49.259036007208884
+        }
+    },
+    {
+        "uuid": "uuiduser20",
+        "name": "user20",
+        "email": "user20@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user21",
+            "user22",
+            "user23"
+        ],
+        "location": {
+            "longitude": -123.248789168323,
+            "latitude": 49.25882831815102
+        }
+    },
+    {
+        "uuid": "uuiduser21",
+        "name": "user21",
+        "email": "user21@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user22",
+            "user23",
+            "user24"
+        ],
+        "location": {
+            "longitude": -123.24733969896225,
+            "latitude": 49.263467502700585
+        }
+    },
+    {
+        "uuid": "uuiduser22",
+        "name": "user22",
+        "email": "user22@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user23",
+            "user24",
+            "user25"
+        ],
+        "location": {
+            "longitude": -123.2538661098409,
+            "latitude": 49.25888008162236
+        }
+    },
+    {
+        "uuid": "uuiduser23",
+        "name": "user23",
+        "email": "user23@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user24",
+            "user25",
+            "user26"
+        ],
+        "location": {
+            "longitude": -123.25173871139425,
+            "latitude": 49.26037303381618
+        }
+    },
+    {
+        "uuid": "uuiduser24",
+        "name": "user24",
+        "email": "user24@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user25",
+            "user26",
+            "user27"
+        ],
+        "location": {
+            "longitude": -123.24856304894205,
+            "latitude": 49.26003060969911
+        }
+    },
+    {
+        "uuid": "uuiduser25",
+        "name": "user25",
+        "email": "user25@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user26",
+            "user27",
+            "user28"
+        ],
+        "location": {
+            "longitude": -123.24642374587964,
+            "latitude": 49.26300187617219
+        }
+    },
+    {
+        "uuid": "uuiduser26",
+        "name": "user26",
+        "email": "user26@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user27",
+            "user28",
+            "user29"
+        ],
+        "location": {
+            "longitude": -123.24830161520082,
+            "latitude": 49.25877759732202
+        }
+    },
+    {
+        "uuid": "uuiduser27",
+        "name": "user27",
+        "email": "user27@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user28",
+            "user29",
+            "user30"
+        ],
+        "location": {
+            "longitude": -123.24946895770778,
+            "latitude": 49.26307507864796
+        }
+    },
+    {
+        "uuid": "uuiduser28",
+        "name": "user28",
+        "email": "user28@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user29",
+            "user30",
+            "user31"
+        ],
+        "location": {
+            "longitude": -123.24759487501947,
+            "latitude": 49.2655477763039
+        }
+    },
+    {
+        "uuid": "uuiduser29",
+        "name": "user29",
+        "email": "user29@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user30",
+            "user31",
+            "user32"
+        ],
+        "location": {
+            "longitude": -123.24731589429422,
+            "latitude": 49.26651183738626
+        }
+    },
+    {
+        "uuid": "uuiduser30",
+        "name": "user30",
+        "email": "user30@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user31",
+            "user32",
+            "user33"
+        ],
+        "location": {
+            "longitude": -123.25286397896168,
+            "latitude": 49.258818620596216
+        }
+    },
+    {
+        "uuid": "uuiduser31",
+        "name": "user31",
+        "email": "user31@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user32",
+            "user33",
+            "user34"
+        ],
+        "location": {
+            "longitude": -123.24643945967534,
+            "latitude": 49.257621892800934
+        }
+    },
+    {
+        "uuid": "uuiduser32",
+        "name": "user32",
+        "email": "user32@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user33",
+            "user34",
+            "user35"
+        ],
+        "location": {
+            "longitude": -123.2482510137869,
+            "latitude": 49.26396634322744
+        }
+    },
+    {
+        "uuid": "uuiduser33",
+        "name": "user33",
+        "email": "user33@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user34",
+            "user35",
+            "user36"
+        ],
+        "location": {
+            "longitude": -123.24722987436975,
+            "latitude": 49.25962055029081
+        }
+    },
+    {
+        "uuid": "uuiduser34",
+        "name": "user34",
+        "email": "user34@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user35",
+            "user36",
+            "user37"
+        ],
+        "location": {
+            "longitude": -123.25039192259125,
+            "latitude": 49.262934123358704
+        }
+    },
+    {
+        "uuid": "uuiduser35",
+        "name": "user35",
+        "email": "user35@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user36",
+            "user37",
+            "user38"
+        ],
+        "location": {
+            "longitude": -123.2509526812536,
+            "latitude": 49.260639311800624
+        }
+    },
+    {
+        "uuid": "uuiduser36",
+        "name": "user36",
+        "email": "user36@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user37",
+            "user38",
+            "user39"
+        ],
+        "location": {
+            "longitude": -123.24644921893764,
+            "latitude": 49.25996608595841
+        }
+    },
+    {
+        "uuid": "uuiduser37",
+        "name": "user37",
+        "email": "user37@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user38",
+            "user39",
+            "user40"
+        ],
+        "location": {
+            "longitude": -123.24842049453375,
+            "latitude": 49.263020986197674
+        }
+    },
+    {
+        "uuid": "uuiduser38",
+        "name": "user38",
+        "email": "user38@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user39",
+            "user40",
+            "user41"
+        ],
+        "location": {
+            "longitude": -123.25144056914726,
+            "latitude": 49.257072010358385
+        }
+    },
+    {
+        "uuid": "uuiduser39",
+        "name": "user39",
+        "email": "user39@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user40",
+            "user41",
+            "user42"
+        ],
+        "location": {
+            "longitude": -123.25299241787903,
+            "latitude": 49.25868557006722
+        }
+    },
+    {
+        "uuid": "uuiduser40",
+        "name": "user40",
+        "email": "user40@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user41",
+            "user42",
+            "user43"
+        ],
+        "location": {
+            "longitude": -123.24710224673194,
+            "latitude": 49.260320242616764
+        }
+    },
+    {
+        "uuid": "uuiduser41",
+        "name": "user41",
+        "email": "user41@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user42",
+            "user43",
+            "user44"
+        ],
+        "location": {
+            "longitude": -123.24695817527454,
+            "latitude": 49.26212384418747
+        }
+    },
+    {
+        "uuid": "uuiduser42",
+        "name": "user42",
+        "email": "user42@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user43",
+            "user44",
+            "user45"
+        ],
+        "location": {
+            "longitude": -123.25055287874616,
+            "latitude": 49.260685050127805
+        }
+    },
+    {
+        "uuid": "uuiduser43",
+        "name": "user43",
+        "email": "user43@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user44",
+            "user45",
+            "user46"
+        ],
+        "location": {
+            "longitude": -123.24714858581477,
+            "latitude": 49.25766860483919
+        }
+    },
+    {
+        "uuid": "uuiduser44",
+        "name": "user44",
+        "email": "user44@test.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "user45",
+            "user46",
+            "user47"
+        ],
+        "location": {
+            "longitude": -123.24473642046895,
+            "latitude": 49.261734668786154
+        }
+    },
+    {
+        "uuid": "thisuserdoesexist",
+        "name": "jon doe",
+        "email": "jon@jon.com",
+        "photoURL": "sdf/sdf/sdf/",
+        "friends": [
+            "oysterblue",
+            "jonjonbinks",
+            "shinnerninja"
+        ],
+        "location": {
+            "longitude": -123.249629,
+            "latitude": 49.261895
+        }
+    },
+    {
+        "uuid": "shinnerninja",
+        "name": "Ingyu Shin",
+        "email": "steven.shin.95@gmail.com",
+        "photoURL": "www.google.ca",
+        "friends": [
+            "oysterblue",
+            "jonjonbinks"
+        ],
+        "location": {
+            "longitude": -123.249629,
+            "latitude": 49.261895
+        }
+    },
+    {
+        "uuid": "jonjonbinks",
+        "name": "Jonathan Fleming",
+        "email": "jonathanfleming135@gmail.com",
+        "photoURL": "www.google.ca",
+        "friends": [
+            "oysterblue",
+            "shinnerninja"
+        ],
+        "location": {
+            "longitude": -123.249629,
+            "latitude": 49.261895
+        }
+    },
+    {
+        "uuid": "oysterblue",
+        "name": "Justin Awrey",
+        "email": "awreyjustin@gmail.com",
+        "photoURL": "www.google.ca",
+        "friends": [
+            "shinnerninja",
+            "jonjonbinks"
+        ],
+        "location": {
+            "longitude": -123.249629,
+            "latitude": 49.261895
+        }
+    }
+]
