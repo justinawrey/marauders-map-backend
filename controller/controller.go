@@ -67,7 +67,7 @@ func weightToMeters(weight float64) float64 {
 	basis := 60.0
 	switch {
 	case weight < 0.0:
-		return -1.0
+		return 0.0
 	case weight <= 0.2:
 		return basis * 1.0
 	case weight <= 0.4:
@@ -79,9 +79,9 @@ func weightToMeters(weight float64) float64 {
 	case weight <= 1.0:
 		return basis * 5.0
 	case weight > 1.0:
-		return -1.0
+		return 0.0
 	default:
-		return -1.0
+		return 0.0
 	}
 }
 
